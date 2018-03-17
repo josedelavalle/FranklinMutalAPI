@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using FranklinMutualAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace FranklinMutualAPI
 {
@@ -24,6 +26,8 @@ namespace FranklinMutualAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddDbContext<FranklinMutualContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("FranklinMutualDatabase")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
