@@ -26,7 +26,7 @@ namespace FranklinMutualAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddDbContext<FranklinMutualContext>(options =>
+            services.AddDbContext<FranklinMutualDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("FranklinMutualDatabase")));
         }
 

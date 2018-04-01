@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using FranklinMutualAPI.Models;
 using HtmlAgilityPack;
 using System.Xml.Linq;
+using System.Data.SqlClient;
 
 namespace FranklinMutualAPI.Controllers
 {
@@ -16,11 +17,11 @@ namespace FranklinMutualAPI.Controllers
     [Route("api/Agencies")]
     public class AgenciesController : Controller
     {
-        private readonly FranklinMutualContext _context;
+        private readonly FranklinMutualDbContext _context;
 
         HtmlWeb web = new HtmlWeb();
 
-        public AgenciesController(FranklinMutualContext context)
+        public AgenciesController(FranklinMutualDbContext context)
         {
             _context = context;
         }
@@ -166,7 +167,17 @@ namespace FranklinMutualAPI.Controllers
         [HttpGet]
         public IEnumerable<Agency> GetAgency()
         {
-            return _context.Agency;
+            return _context.Agency.OrderBy(x => x.Name);
+        }
+
+        [HttpGet("[action]")]
+        public List<Agency> GetAgenciesWithinRadius(int radius, string latitude, string longitude)
+        {
+            var agencies = _context.Agency
+                .FromSql("SELECT * FROM FindAgenciesWithinRadiusFn(" + radius + ", " + latitude + ", " + longitude + ")")
+                .OrderBy(x => x.Name).ToList();
+
+            return agencies;
         }
 
         // GET: api/Agencies/5
